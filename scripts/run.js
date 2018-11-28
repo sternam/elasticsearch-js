@@ -19,9 +19,9 @@ function start (opts) {
     log.fail(`Missing or invalid tag: ${opts.tag}`)
     return
   }
-  const packageFolder = join(__dirname, '..', 'api')
+  const packageFolder = join(__dirname, '..', 'src', 'api')
   const apiOutputFolder = join(packageFolder, 'api')
-  const mainOutputFile = join(packageFolder, 'index.js')
+  const mainOutputFile = join(packageFolder, 'index.ts')
 
   log.text = 'Cleaning API folder...'
   rimraf.sync(join(apiOutputFolder, '*.js'))

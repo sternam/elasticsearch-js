@@ -7,6 +7,28 @@ const deepmerge = require('deepmerge')
 function genFactory (folder) {
   // get all the API files
   const apiFiles = readdirSync(folder)
+  const types = apiFiles
+    .map(file => {
+      return file
+        .slice(0, -3) // remove `.js` extension
+        .split('.')
+        .reverse()
+        .reduce((acc, val) => {
+          const obj = {
+            [val]: acc === null
+              ? 'apiMethod'
+              : acc
+          }
+          if (isSnakeCased(val)) {
+            obj[camelify(val)] = acc === null
+              ? 'apiMethod'
+              : acc
+          }
+          return obj
+        }, null)
+    })
+    .reduce((acc, val) => deepmerge(acc, val), {})
+
   const apis = apiFiles
     .map(file => {
       // const name = format(file.slice(0, -3))
@@ -17,12 +39,12 @@ function genFactory (folder) {
         .reduce((acc, val) => {
           const obj = {
             [val]: acc === null
-              ? `lazyLoad('./api/${file}', opts)` // `${name}(opts)`
+              ? `lazyLoad('./api/${changeExtension(file)}', opts)` // `${name}(opts)`
               : acc
           }
           if (isSnakeCased(val)) {
             obj[camelify(val)] = acc === null
-              ? `lazyLoad('./api/${file}', opts)` // `${name}(opts)`
+              ? `lazyLoad('./api/${changeExtension(file)}', opts)` // `${name}(opts)`
               : acc
           }
           return obj
@@ -31,27 +53,46 @@ function genFactory (folder) {
     .reduce((acc, val) => deepmerge(acc, val), {})
 
   // serialize the API object
-  const apisStr = JSON.stringify(apis, null, 2)
-    // split & join to fix the indentation
-    .split('\n')
+  const apisStr = Object.keys(apis)
+    .map(key => `this.${key} = ${JSON.stringify(apis[key], null, 2)}`)
     .join('\n    ')
     // remove useless quotes
     .replace(/"/g, '')
 
+  // serialize the type object
+  const typesStr = Object.keys(types)
+    .map(key => `${key}: ${JSON.stringify(types[key], null, 6)}`)
+    .join('\n    ')
+    // remove useless quotes
+    .replace(/"/g, '')
+    .replace(/,/g, '')
+
   const fn = dedent`
   'use strict'
 
-  const assert = require('assert')
+  /* eslint-disable camelcase */
+  /* eslint-disable no-unused-vars */
+  import { EventEmitter } from 'events'
+  import { ApiResponse } from '../Transport'
+  /* eslint-enable no-unused-vars */
 
-  function ESAPI (opts) {
-    assert(opts.makeRequest, 'Missing makeRequest function')
-    assert(opts.ConfigurationError, 'Missing ConfigurationError class')
-    assert(opts.result, 'Missing default result object')
+  type anyObject = { [key: string]: any }
+  type callbackFn = (err: Error | null, result: ApiResponse) => void
+  type apiMethod = (params?: anyObject | callbackFn, callback?: callbackFn) => any
+  declare function require(moduleName: string): any
 
-    const apis = ${apisStr}
+  interface ESAPIOptions {
+    getMakeRequest: Function
+    ConfigurationError: any
+    result: any
+  }
 
-
-    return apis
+  export default class ESAPI extends EventEmitter {
+    ${typesStr}
+    constructor (opts: ESAPIOptions) {
+      super()
+      ${apisStr}
+    }
   }
 
   // It's unlikely that a user needs all of our APIs,
@@ -61,17 +102,16 @@ function genFactory (folder) {
   // if the user actually needs that API.
   // The following implementation takes advantage
   // of js closures to have a simple cache with the least overhead.
-  function lazyLoad (file, opts) {
-    var fn = null
-    return function _lazyLoad (params, callback) {
+  function lazyLoad (file: string, opts: any): any {
+    var fn: any = null
+    return function _lazyLoad (params: any, callback: any): any {
       if (fn === null) {
+        opts.makeRequest = opts.getMakeRequest()
         fn = require(file)(opts)
       }
       return fn(params, callback)
     }
   }
-
-  module.exports = ESAPI
   `
 
   // new line at the end of file
@@ -85,6 +125,10 @@ function camelify (str) {
 
 function isSnakeCased (str) {
   return !!~str.indexOf('_')
+}
+
+function changeExtension (file) {
+  return file.slice(0, -2) + 'js'
 }
 
 module.exports = genFactory

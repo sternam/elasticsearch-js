@@ -74,8 +74,8 @@ function generate (spec, common) {
     // promises support
     if (callback == null) {
       return new Promise((resolve, reject) => {
-        ${safeWords(name)}(params, (err, body) => {
-          err ? reject(err) : resolve(body)
+        ${safeWords(name)}((err, result) => {
+          err ? reject(err) : resolve(result)
         })
       })
     }
@@ -144,14 +144,12 @@ function generate (spec, common) {
   const fn = dedent`
   'use strict'
 
-  function build${name[0].toUpperCase() + name.slice(1)} (opts) {
+  module.exports = function build${name[0].toUpperCase() + name.slice(1)} (opts) {
     // eslint-disable-next-line no-unused-vars
     const { makeRequest, ConfigurationError, result } = opts
     ${generateDocumentation(spec[api], api)}
     return ${code}
   }
-
-  module.exports = build${name[0].toUpperCase() + name.slice(1)}
 `
 
   // new line at the end of file
