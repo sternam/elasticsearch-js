@@ -15,11 +15,15 @@
     "index"
   ],
   "scripts": {
-    "test": "npm run lint && npm run test:unit",
+    "test": "npm run lint:js && npm run lint:ts && npm run test:unit",
     "test:unit": "tap test/unit/*.test.js -J -T",
     "test:integration": "tap test/integration/index.js -T --harmony",
-    "lint": "standard",
-    "lint:fix": "standard --fix",
+    "lint:js": "standard",
+    "lint:ts": "standard --parser typescript-eslint-parser --plugin typescript src/*.ts src/**/*.ts",
+    "lint:fix-js": "standard --fix lib/*.js lib/**/*.js",
+    "lint:fix-ts": "standard --fix --parser typescript-eslint-parser --plugin typescript src/*.ts src/**/*.ts",
+    "fix-ts-build": "echo \"/* eslint-disable camelcase */\" | cat - lib/index.js > temp && mv temp lib/index.js",
+    "build": "tsc && cp -r src/api/api/* lib/api/api/ && npm run fix-ts-build && npm run lint:fix-js",
     "generate": "node scripts/run.js",
     "elasticsearch": "./scripts/es-docker.sh",
     "ci": "./scripts/wait-cluster.sh && npm test && npm run test:integration"
@@ -35,9 +39,11 @@
   "devDependencies": {
     "dedent": "^0.7.0",
     "deepmerge": "^2.2.1",
+    "eslint-plugin-typescript": "^0.14.0",
     "into-stream": "^4.0.0",
     "js-yaml": "^3.12.0",
     "minimist": "^1.2.0",
+    "npm": "^6.4.1",
     "ora": "^3.0.0",
     "rimraf": "^2.6.2",
     "semver": "^5.6.0",
@@ -45,11 +51,20 @@
     "standard": "^12.0.0",
     "stoppable": "^1.0.7",
     "tap": "^12.0.1",
+    "typescript": "^3.1.6",
+    "typescript-eslint-parser": "^21.0.1",
     "workq": "^2.1.0"
   },
   "dependencies": {
+    "@types/debug": "0.0.31",
+    "@types/decompress-response": "^3.3.0",
+    "@types/ms": "^0.7.30",
+    "@types/node": "^10.12.9",
+    "@types/once": "^1.4.0",
+    "@types/pump": "^1.0.1",
     "debug": "^4.1.0",
     "decompress-response": "^3.3.0",
+    "install": "^0.12.2",
     "ms": "^2.1.1",
     "once": "^1.4.0",
     "pump": "^3.0.0"
@@ -64,5 +79,8 @@
   },
   "engines": {
     "node": ">=6"
+  },
+  "standard": {
+    "globals": ["SecureContextOptions", "ApiResponse"]
   }
 }
