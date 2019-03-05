@@ -1,6 +1,7 @@
-# elasticsearch.js 12.1.3
+# elasticsearch.js 12.1.6
 
-The official low-level Elasticsearch client for Node.js and the browser.
+Identical to elasticsearch-js tag v12.1.3 except added [usage of agentkeepalive](https://github.com/rrgrs/elasticsearch-js/commit/7b65d356b769a39b594cd7d5909f898e94ddb624) to prevent No Living Connections errors.
+
 
 [![Coverage Status](http://img.shields.io/coveralls/elastic/elasticsearch-js/master.svg?style=flat-square)](https://coveralls.io/r/elastic/elasticsearch-js?branch=master)
 [![Dependencies up to date](http://img.shields.io/david/elastic/elasticsearch-js.svg?style=flat-square)](https://david-dm.org/elastic/elasticsearch-js)

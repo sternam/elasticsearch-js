@@ -6,7 +6,7 @@
   "name": "elasticsearch-sternam",
   "description": "A fork off the official low-level Elasticsearch client for Node.js and the browser.",
   "main": "src/elasticsearch.js",
-  "version": "12.1.5",
+  "version": "12.1.6",
   "browser": {
     "./src/lib/connectors/index.js": "./src/lib/connectors/browser_index.js",
     "./src/lib/loggers/index.js": "./src/lib/loggers/browser_index.js",
@@ -102,7 +102,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/sternam/elasticsearch-sternam.git"
+    "url": "http://github.com/sternam/elasticsearch-js.git"
   },
   "scripts": {
     "test": "grunt test",
