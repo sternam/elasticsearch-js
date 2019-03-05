@@ -3,7 +3,7 @@
     "name": "Spencer Alger",
     "company": "Elasticsearch BV"
   },
-  "name": "elasticsearch",
+  "name": "elasticsearch-sternam",
   "description": "The official low-level Elasticsearch client for Node.js and the browser.",
   "main": "src/elasticsearch.js",
   "homepage": "http://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html",
