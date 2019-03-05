@@ -1,13 +1,12 @@
 {
   "author": {
-    "name": "Spencer Alger",
-    "company": "Elasticsearch BV"
+    "name": "Allen Stern",
+    "company": "N/A"
   },
   "name": "elasticsearch-sternam",
-  "description": "The official low-level Elasticsearch client for Node.js and the browser.",
+  "description": "A fork off the official low-level Elasticsearch client for Node.js and the browser.",
   "main": "src/elasticsearch.js",
-  "homepage": "http://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html",
-  "version": "12.1.4",
+  "version": "12.1.5",
   "browser": {
     "./src/lib/connectors/index.js": "./src/lib/connectors/browser_index.js",
     "./src/lib/loggers/index.js": "./src/lib/loggers/browser_index.js",
@@ -43,7 +42,6 @@
   },
   "devDependencies": {
     "@spalger/eslint-config-personal": "^0.4.0",
-    "agentkeepalive": "^2.0.3",
     "async": "~0.8.0",
     "babel-eslint": "^6.0.4",
     "blanket": "^1.2.3",
@@ -96,6 +94,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "agentkeepalive": "^2.0.3",
     "chalk": "^1.0.0",
     "forever-agent": "^0.6.0",
     "lodash": "^4.12.0",
@@ -103,7 +102,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/elastic/elasticsearch-js.git"
+    "url": "http://github.com/sternam/elasticsearch-sternam.git"
   },
   "scripts": {
     "test": "grunt test",
