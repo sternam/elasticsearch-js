@@ -4,9 +4,9 @@
     "company": "N/A"
   },
   "name": "elasticsearch-sternam",
-  "description": "A fork off the official low-level Elasticsearch client for Node.js and the browser.",
+  "description": "A fork off the official low-level Elasticsearch client for Node.js and the browser. Same as elasticsearch-js tag v12.1.3 plus use 'agentkeepalive'",
   "main": "src/elasticsearch.js",
-  "version": "12.1.6",
+  "version": "12.1.7",
   "browser": {
     "./src/lib/connectors/index.js": "./src/lib/connectors/browser_index.js",
     "./src/lib/loggers/index.js": "./src/lib/loggers/browser_index.js",
